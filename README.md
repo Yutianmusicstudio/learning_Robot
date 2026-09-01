@@ -115,10 +115,13 @@ docs/
   3d-printing.md     CAD / 打印机 / 材料 / 设计规范
   simulation.md      仿真软件选型与学习路径
   resources.md       书、课程、参考项目
+docs/lessons/
+  L01-让一个引脚听你的话.md   第一课（不需要买任何东西，今晚就能做）
 code/
+  lesson01/                 第一课的五个实验
   phase0_single_solenoid/   单电磁铁 peak-and-hold 测试
   phase1_eight_keys/        8 路驱动 + 串口协议固件
   host/                     Python 上位机：MIDI → 串口
 ```
 
-**下一步：读 [`docs/roadmap.md`](docs/roadmap.md) 的 Phase 0，然后去买那 8 个电磁铁。**
+**下一步：直接开始 [第一课 · 让一个引脚听你的话](docs/lessons/L01-让一个引脚听你的话.md)** —— 只用你现有的 Arduino 套件，90 分钟，今晚就能做完。
