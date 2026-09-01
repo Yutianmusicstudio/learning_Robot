@@ -107,6 +107,7 @@ Phase 5  感知与智能          长期   —— 摄像头读谱、力反馈、
 
 ```
 docs/
+  project-proposal.md ★ 方案书：材料清单+技术清单+可行性报告+成果预估
   field-landscape.md 领域实况：什么已经做完了，什么还没有，什么才算有意义
   research-plan-touch-tone.md  研究支线计划：可编程触键力学平台
   vision-omr-assessment.md     评估：视觉识谱+触键演奏有没有机会
