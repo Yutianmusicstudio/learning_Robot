@@ -1,0 +1,133 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{times}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\titleformat{\section}{\normalfont\large\bfseries}{\thesection.}{0.5em}{}
+\titlespacing*{\section}{0pt}{1.1em}{0.4em}
+\setlist{nosep,leftmargin=1.4em}
+
+\title{\vspace{-1.5em}\textbf{From Accompaniment to Ensemble:\\
+A Robotic \emph{Secondo} for Four-Hand Piano Performance}\vspace{-0.5em}}
+\author{[Your Name] \\ \small Georgia Institute of Technology}
+\date{\vspace{-0.8em}\small\today\vspace{-1em}}
+
+\begin{document}
+\maketitle
+
+\section{Motivation}
+Robotic musicianship studies machines that not only produce music but collaborate with
+human musicians by listening and responding expressively~\cite{weinberg2020robotic,hoffman2011interactive}.
+Most piano-playing robots, however, are evaluated as \emph{soloists}: the benchmark is whether
+the machine can reproduce a score with human-like dexterity~\cite{zakka2023robopianist}.
+The complementary problem---playing \emph{with} a human on a written piece---remains open.
+
+Wang, Zhang and Iida recently reported what they describe as the first collaborative robot
+engineered specifically for the artistic task of piano playing~\cite{wang2024cooperative}.
+Their system is a strong starting point, and its stated limitations define a clear next step.
+
+\section{State of the Art and Its Limitations}
+The system in~\cite{wang2024cooperative} couples a UR5 arm and a soft--rigid anthropomorphic hand
+to a digital piano. A recurrent network trained on popular music predicts chords from the human's
+melodic input (93\% accuracy), and a model-predictive controller aligns the robot's chord onsets
+with the human's timing. The authors report six limitations, four of which are decisive here:
+
+\begin{enumerate}[label=(L\arabic*)]
+  \item \textbf{Coverage.} Hardware constraints reduced the vocabulary to \emph{seven} triads.
+  \item \textbf{Speed and safety.} The UR5 is ``not agile/fast enough'': time budgeted for
+        keystrokes must be reallocated to lateral chord transitions, and the authors propose adding
+        proximity and force sensing so the arm does not strike a nearby human.
+  \item \textbf{Architectural latency.} Because communication ``relies on MIDI,'' the model can only
+        predict once an entire bar of melody has been observed, ``resulting in a lag.''
+  \item \textbf{Evaluation.} Whether a listener \emph{enjoys} the result is deferred as
+        ``psychological and subjective analysis.''
+\end{enumerate}
+
+Crucially, the task is \emph{homophonic improvisation}: generating chords beneath an unknown melody.
+It is not ensemble performance of a written work.
+
+\section{Research Questions}
+\begin{enumerate}[label=\textbf{RQ\arabic*.}]
+  \item Can a robot perform the written \emph{secondo} part of a four-hand piano work while a human
+        performs the \emph{primo}, following the human's rubato, phrasing and pedalling?
+  \item Does visual anticipation of the human's hand motion---available 100--300\,ms before key
+        contact---remove the architectural latency imposed by MIDI-only sensing?
+  \item How should such a system be evaluated from the \emph{co-performer's} perspective rather than
+        the listener's?
+\end{enumerate}
+
+The shift from ``what to play'' to ``when and how to play it with you'' is the central claim.
+Four-hand piano is the natural testbed: the two performers share one keyboard, one soundboard and
+one damper pedal---an ensemble condition that no existing musical robot has faced.
+
+\section{Proposed Approach}
+
+\paragraph{A. Full-coverage fixed actuator array (addresses L1, L2).}
+In four-hand repertoire the \emph{secondo} occupies the lower register. A fixed array of
+$\approx$40 solenoids over C1--E4, plus one sustain-pedal actuator, is therefore a complete
+secondo robot. It removes the chord vocabulary limit, has $\sim$10\,ms response with no lateral
+travel, and---because nothing moves except the keys---eliminates the collision hazard that motivates
+the sensing proposed in~\cite{wang2024cooperative}. The pedal actuator resolves the array's
+intrinsic constraint: a held note otherwise locks its actuator, whereas raising the dampers
+sustains the sound and frees it immediately.
+
+Solenoid actuation has been shown to be less expressive than brushless direct-drive actuation for
+robotic percussion~\cite{nime2020bldc}. That comparison concerns \emph{striking}, where the
+actuator contacts the resonator directly and must shape a free trajectory. Piano keys are different:
+the escapement releases the hammer before string contact, so the actuator delivers an impulse to a
+lever rather than following the hammer through. More importantly, the secondo part requires many
+keys to be \emph{held simultaneously}---a requirement a small number of moving effectors cannot
+meet at any actuation quality. Quantifying the expressivity cost of this trade-off, and how far
+pedalling and per-key current shaping recover it, is itself an outcome of P2--P3.
+
+\paragraph{B. Score following with visual anticipation (addresses L3).}
+Real-time score following is a mature field~\cite{raphael2010musicplusone,cont2008antescofo};
+\emph{no algorithmic novelty is claimed}. The contribution is its integration under the physical
+constraints of a shared instrument: actuator latency, polyphonic hold constraints, and a shared
+pedal. A top-view camera estimating hand keypoints supplies anticipatory input before key contact,
+compensating for both actuator and follower latency. Public datasets of piano hand
+motion~\cite{furelise2024,pianovam2025} support pre-training.
+
+\paragraph{C. Performer-centred evaluation (addresses L4).}
+Three layers: (i) objective ensemble asynchrony, human--human versus human--robot, using the
+behavioural protocol established for piano duets~\cite{hyperscanning2021}; (ii) a co-performer
+experience instrument---this literature evaluates almost exclusively from the listener's side;
+(iii) optionally, EEG hyperscanning against the published human--human
+baseline~\cite{hyperscanning2021}, extending prior work that contrasted expressive human and
+mechanical performance neurally~\cite{chapin2010dynamic}.
+
+\section{Work Plan}
+\begin{enumerate}[label=\textbf{P\arabic*.}]
+  \item \textbf{Software only (no hardware).} MIDI-in, score follower, secondo rendered through the
+        digital piano. Demonstrates that ensemble following works.
+  \item \textbf{Actuator array.} 8 $\rightarrow$ 24 $\rightarrow$ 40 keys plus pedal, with a
+        custom driver board.
+  \item \textbf{Integration and first evaluation.} Asynchrony and co-performer experience.
+        \emph{Publishable at this point.}
+  \item \textbf{Visual anticipation.} Latency comparison, MIDI-only versus MIDI\,+\,vision.
+  \item \textbf{EEG hyperscanning (optional).}
+\end{enumerate}
+
+\section{Expected Contributions}
+\begin{enumerate}[label=(\arabic*)]
+  \item The first robotic system to perform a written four-hand part in ensemble with a human on a
+        \emph{shared} instrument, reframing human--robot piano collaboration from improvised
+        accompaniment to ensemble performance.
+  \item An actuation architecture that resolves four of the six limitations
+        in~\cite{wang2024cooperative} by removing the manipulator entirely.
+  \item An evaluation protocol centred on the co-performer rather than the listener, addressing the
+        assessment gap those authors explicitly defer.
+\end{enumerate}
+
+\paragraph{Fit.} The author is trained in piano performance, which is required to define what
+``playing together'' means and to recruit and assess pianist participants; and works on EEG, which
+supplies the neural evaluation layer. Prior work in this group established that a robot's ancillary
+gestures aid human--robot synchronisation when the partners play \emph{separate}
+instruments~\cite{musicbodymachine2024}; the present proposal asks what happens when they do not.
+
+\bibliographystyle{unsrt}
+\bibliography{references}
+\end{document}
