@@ -107,6 +107,7 @@ Phase 5  感知与智能          长期   —— 摄像头读谱、力反馈、
 
 ```
 docs/
+  three-directions-verdict.md  三个候选方向的检索结论（全部已被占）
   research-keywords.md  检索关键词、领域空白与发表门槛
   mini-shimon-piano.md ★ 当前主线：钢琴版 mini Shimon（含块状清单）
   project-proposal.md ★ 方案书：材料清单+技术清单+可行性报告+成果预估
