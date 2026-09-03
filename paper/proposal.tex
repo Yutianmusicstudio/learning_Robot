@@ -38,11 +38,20 @@ transitions; and the predictor requires all 16 melody tokens before it can outpu
 
 Their task is improvised accompaniment: generating chords under an unknown melody. Four-hand piano is
 a different and simpler problem. Both parts are written, so the robot generates nothing --- it must
-press the right keys at the right time while a human plays the other part at the same keyboard. To
-our knowledge no robotic system has been reported doing this. Piano robots have been developed mainly
-as soloists~\cite{zakka2023robopianist}; real-time alignment to a human performer is itself a mature
-area~\cite{raphael2010musicplusone,cont2008antescofo,cancinochacon2023accompanion}. This project
-claims no new algorithm in either.
+press the right keys at the right time while a human plays the other part at the same keyboard.
+
+Machines have shared a keyboard with a live pianist for decades. Risset's \emph{Duet for One Pianist}
+(1989) has a Disklavier play a computer-generated part that responds to the pianist in real time on
+the same instrument~\cite{risset1996duet}; Yamaha's AI ensemble technology drove a Disklavier through
+the piano part of Schubert's ``Trout'' Quintet in synchrony with members of the Berlin Philharmonic
+in 2016~\cite{yamaha2016ensemble}; and recent generative systems continue a pianist's playing on the
+same keys by turn-taking~\cite{ghostkeys2025}. Piano robots have otherwise been developed mainly as
+soloists~\cite{zakka2023robopianist}, and real-time alignment to a human performer is a mature
+area~\cite{raphael2010musicplusone,cont2008antescofo,cancinochacon2023accompanion}. What we have not
+found reported is the particular configuration proposed here: a purpose-built actuator array
+performing the \emph{notated secondo} of four-hand repertoire, aligned to the human primo by score
+following on a shared keyboard, and evaluated against a human--human four-hand baseline. No component
+of this is claimed as novel; the contribution is the configuration and its measurement.
 
 \section{The One Thing To Check First}
 Ensemble coordination operates within tolerances of tens of milliseconds. Reported detection
