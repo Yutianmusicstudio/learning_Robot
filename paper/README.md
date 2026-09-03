@@ -1,11 +1,14 @@
 # Overleaf 用的 research purpose
 
 ## 文件
-- `research_purpose.tex` — 主文档，约 2 页，纯 `article` 类，无特殊宏包
+- `proposal.tex` — ★ **当前主文档**：research proposal，约 2 页。
+  目标锚定在"这台机器能不能做出来"——能与人合奏四手联弹曲目；
+  rubato 的表达性协商与 EEG 评估明确移入 Future Work。
+- `research_purpose.tex` — 更早的 research purpose 版本，保留备用
 - `references.bib` — 参考文献
 
 ## 在 Overleaf 上
-把两个文件上传到同一个项目，编译顺序 **pdfLaTeX → BibTeX → pdfLaTeX ×2**
+把 `proposal.tex`（或 `research_purpose.tex`）与 `references.bib` 上传到同一个项目，编译顺序 **pdfLaTeX → BibTeX → pdfLaTeX ×2**
 （Overleaf 默认的 "Recompile" 会自动处理）。
 
 ## ⚠️ 提交前必做
@@ -18,6 +21,12 @@
 - `furelise2024` / `pianovam2025` / `zakka2023robopianist`
 
 只有 `wang2024cooperative`（通读过全文）和 `weinberg2020robotic` 是我核实过的。
+
+## 写作原则（改动时请保持）
+1. **凡是断言都带引用**；凡是估算都明写为待测，不冒充定论——
+   延迟表里只有感知容差三项有文献，链路各段标注 "estimates to be measured in M1--M2"。
+2. **主动声明不主张跟谱算法的新意**（那是成熟领域），贡献在于共享乐器约束下的集成。
+3. 未穷尽的检索结论用 hedge（"to our knowledge"）。
 
 ## 结构对应
 `.tex` 的六节对应 `docs/four-hands-proposal.md`：
