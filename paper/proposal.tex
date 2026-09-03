@@ -12,7 +12,7 @@
 \setlist{nosep,leftmargin=1.5em}
 
 \title{\vspace{-1.6em}\textbf{A Robotic Co-Performer for Four-Hand Piano}\vspace{-0.4em}}
-\author{[Your Name]\\ \small Georgia Institute of Technology}
+\author{Yutian Wang}
 \date{\vspace{-0.7em}\small\today\vspace{-1.2em}}
 
 \begin{document}
@@ -81,29 +81,6 @@ Machines have shared a keyboard with a live pianist since Risset's \emph{Duet fo
 Pianist}~\cite{risset1996duet}, and a Disklavier has played a notated part in real-time synchrony
 with human musicians~\cite{muens2017,yamaha2016ensemble}. Nothing above is claimed as new; it is the
 platform the later stages require.
-
-\medskip\noindent
-\textbf{Milestones.}
-\begin{enumerate}[label=\textbf{M\arabic*.}]
-  \item \textbf{Software only.} The score follower drives the secondo through a digital piano's own
-        sound engine, with no actuators. This measures the end-to-end latency budget in the most
-        favourable case, at no hardware cost.
-  \item \textbf{Actuator array.} 8 $\rightarrow$ 24 $\rightarrow$ full secondo range, plus pedal,
-        with a custom driver board. Per-stage latency measured on hardware.
-  \item \textbf{Ensemble performance.} Complete four-hand pieces with a human partner. Tchaikovsky's
-        four-hand folk-song arrangements serve as test material; Schubert's \emph{Marches militaires}
-        D.733 and Brahms's \emph{Hungarian Dances} as demonstration pieces.
-\end{enumerate}
-
-\noindent
-\textbf{Evaluation.} The measure throughout is note-onset asynchrony between the two parts, compared against human--human
-performance of the same passages recorded under the same conditions. Published reference points:
-detection thresholds for asynchrony in singing ensembles fall between roughly 10 and
-38\,ms~\cite{singingsync2019}; professional string quartets at 157\,bpm show onset asynchrony
-standard deviations of 24 and 28\,ms~\cite{quartetsync2014}; networked piano duets are tested at
-transmission latencies of 10, 20 and 40\,ms~\cite{nmpduet2021}. A secondary measure is a structured
-report from the pianist co-performer --- the assessment question deferred
-in~\cite{wang2024cooperative}, asked from the co-performer's side rather than the listener's.
 
 \section{Subsequent Stages}
 \label{sec:future}
