@@ -27,76 +27,46 @@ with a human, evaluated by ensemble timing accuracy. Expressive timing negotiati
 evaluation are deferred to future work (Sec.~\ref{sec:future}).
 
 \section{Background}
-Robotic musicianship concerns machines that collaborate with human musicians rather than merely
-generate sound~\cite{weinberg2020robotic}. Piano-playing robots have largely been developed and
-evaluated as soloists, where the benchmark is dexterous reproduction of a
-score~\cite{zakka2023robopianist}.
+This project follows directly from Wang, Zhang and Iida, who built a UR5 arm with an anthropomorphic
+hand that plays chord accompaniment while a human performs the melody, and describe it as ``the first
+instance of designing and implementing a collaborative robot expressly engineered to work with humans
+in the artistic pursuit of piano playing''~\cite{wang2024cooperative}. Their reported limitations are
+instructive: the chord vocabulary was reduced to seven triads ``due to hardware limitations''; the
+UR5 is ``not agile/fast enough'', so time budgeted for keystrokes must be spent on lateral chord
+transitions; and the predictor requires all 16 melody tokens before it can output a chord,
+``resulting in a lag''~\cite{wang2024cooperative}.
 
-The closest prior system is that of Wang, Zhang and Iida, who describe it as ``the first instance of
-designing and implementing a collaborative robot expressly engineered to work with humans in the
-artistic pursuit of piano playing''~\cite{wang2024cooperative}. A UR5 arm with an anthropomorphic
-hand plays chord accompaniment beneath a human-performed melody, using a recurrent network for chord
-prediction (93\% accuracy) and a model-predictive controller for temporal alignment. The authors
-report the following limitations~\cite{wang2024cooperative}:
+Their task is improvised accompaniment: generating chords under an unknown melody. Four-hand piano is
+a different and simpler problem. Both parts are written, so the robot generates nothing --- it must
+press the right keys at the right time while a human plays the other part at the same keyboard. To
+our knowledge no robotic system has been reported doing this. Piano robots have been developed mainly
+as soloists~\cite{zakka2023robopianist}; real-time alignment to a human performer is itself a mature
+area~\cite{raphael2010musicplusone,cont2008antescofo,cancinochacon2023accompanion}. This project
+claims no new algorithm in either.
 
-\begin{enumerate}[label=\textbf{L\arabic*.}]
-  \item ``Due to hardware limitations, we simplified the tuning system'' --- the chord vocabulary is
-        seven triads.
-  \item ``Due to the hardware limitation (UR5 is not agile/fast enough)'', time allocated to
-        keystrokes must be reallocated to lateral chord transitions.
-  \item ``Only when all 16 tokens of the melody have been fed into the RNN model can the model give a
-        chord prediction \ldots resulting in a lag.''
-  \item ``Evaluating whether a listener `enjoys' the music involves psychological and subjective
-        analysis'' --- deferred.
-\end{enumerate}
-
-The task in~\cite{wang2024cooperative} is improvised homophonic accompaniment: generating chords
-beneath an unknown melody. Performing a written second part in ensemble is a different task, and to
-our knowledge no robotic system has been reported for it.
-
-\section{Why This Is Not Straightforward}
+\section{The One Thing To Check First}
 Ensemble coordination operates within tolerances of tens of milliseconds. Reported detection
 thresholds for asynchrony in singing ensembles lie between approximately 10 and
-38\,ms~\cite{singingsync2019}. Professional string quartets performing at 157\,bpm show note-onset
-asynchrony standard deviations of 24 and 28\,ms~\cite{quartetsync2014}. Studies of networked piano
-duets test acoustic transmission latencies of 10, 20 and 40\,ms as the musically relevant
-range~\cite{nmpduet2021}.
+38\,ms~\cite{singingsync2019}; professional string quartets at 157\,bpm show note-onset asynchrony
+standard deviations of 24 and 28\,ms~\cite{quartetsync2014}; networked piano duets are tested at
+transmission latencies of 10, 20 and 40\,ms~\cite{nmpduet2021}. A physical co-performer accumulates
+delay at every stage of its signal chain --- MIDI input, follower update, scheduling, solenoid
+travel, and the instrument's own key-to-sound time. Rough engineering estimates put the total in the
+range of tens of milliseconds, which is the same order as the tolerances above.
 
-A physical co-performer accumulates latency at every stage of its signal chain. Published figures
-exist only for the perceptual tolerances above; the per-stage figures below are \emph{engineering
-estimates to be measured in M1--M2}, not established results:
-
-\begin{center}
-\begin{tabular}{lr}
-\toprule
-Stage & Estimate (to be measured) \\
-\midrule
-Key press $\rightarrow$ MIDI received & 1--5\,ms \\
-Score-follower position update & 10--50\,ms \\
-Decision and scheduling & 1--5\,ms \\
-Solenoid travel to key contact & 10--30\,ms \\
-Key $\rightarrow$ sound (acoustic action) & 5--20\,ms \\
-\midrule
-Total & $\approx$30--110\,ms \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-\noindent
-If these estimates hold, the accumulated latency exceeds the tolerances
-in~\cite{singingsync2019,quartetsync2014,nmpduet2021}. Establishing whether this is so, and by how
-much, is the first objective of the project (M1).
+This is not presented as a research obstacle. It is the one quantity that determines whether the rest
+of the build is worth doing, and M1 measures it in software before any hardware is bought.
 
 \section{System}
-\textbf{A. Fixed solenoid array.} A fixed actuator per key over the secondo register, plus one
-sustain-pedal actuator, on a standard 88-key instrument. (Array extent is a scope parameter:
-approximately 44 keys covers the secondo range; full 88-key coverage would additionally permit role
-reversal.) A fixed array has no lateral travel, which removes the transition-time constraint L2, and
-places no moving structure near the human's hands. Solenoid actuation has been reported as less
-expressive than brushless direct-drive actuation for robotic percussion~\cite{nime2020bldc}; that
-comparison concerns free-trajectory striking, whereas a fixed array is adopted here because a written
-secondo part requires many keys to be held simultaneously. The expressive cost will be measured
-rather than assumed.
+\textbf{A. Fixed solenoid array.} One actuator per key over the secondo register, plus a
+sustain-pedal actuator, on a standard 88-key instrument. Array extent is a scope parameter:
+approximately 44 keys covers the secondo range, and full 88-key coverage would additionally permit
+role reversal. A fixed array is chosen because a written secondo part requires many keys to be held
+at once; it also has no lateral travel, which removes the transition-time constraint reported
+in~\cite{wang2024cooperative}, and puts no moving structure near the human's hands. Solenoids have
+been reported as less expressive than brushless direct-drive actuation for robotic
+percussion~\cite{nime2020bldc}; that comparison concerns free-trajectory striking, and the expressive
+cost here will be measured rather than assumed.
 
 \textbf{B. Score following.} Real-time alignment to the human's position in the score. This is a
 mature area~\cite{raphael2010musicplusone,cont2008antescofo}, and expressive accompaniment systems
