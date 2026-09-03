@@ -11,6 +11,11 @@
 把 `proposal.tex`（或 `research_purpose.tex`）与 `references.bib` 上传到同一个项目，编译顺序 **pdfLaTeX → BibTeX → pdfLaTeX ×2**
 （Overleaf 默认的 "Recompile" 会自动处理）。
 
+## 文献核实
+见 `references_verified.md`——12 篇 PDF 已全文提取题名页，作者/卷期/页码/DOI 均从原文抄录，
+`references.bib` 中的 TODO 可据此补齐。**该文件同时记录了两处必须修正的引用错误**
+（弦乐四重奏 24/28ms 系转引；40ms 亦为转引，30ms 更贴切），以及一项应从正文删除的无出处说法。
+
 ## ⚠️ 提交前必做
 `.bib` 里标了 `TODO` 的条目**作者列表没有核实**——我是从检索摘要拿的元数据，
 不是从出版页。**投出去之前把每个 TODO 逐条补齐**，尤其是：
