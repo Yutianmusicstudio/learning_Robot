@@ -19,18 +19,19 @@
 \maketitle
 
 \section{Motivation}
-This proposal follows from Wang, Zhang and Iida, who built a UR5 arm with an anthropomorphic hand
+This proposal is prompted by Wang, Zhang and Iida, who built a UR5 arm with an anthropomorphic hand
 that plays chord accompaniment while a human performs the melody at the same piano, and describe it
 as ``the first instance of designing and implementing a collaborative robot expressly engineered to
 work with humans in the artistic pursuit of piano playing''~\cite{wang2024cooperative}. Two of their
 reported limitations are structural rather than incidental: the chord vocabulary was reduced to seven
 triads ``due to hardware limitations'', and the UR5 is ``not agile/fast enough'', so time budgeted
-for keystrokes must be spent on lateral chord transitions~\cite{wang2024cooperative}.
+for keystrokes must be spent on lateral chord transitions~\cite{wang2024cooperative}. Both follow
+from using a single moving arm.
 
-Both limitations follow from using a single moving arm. This project asks what becomes possible with
-a different mechanical structure --- a fixed actuator array with one actuator per key --- and uses
-that platform to move toward two extensions the arm setup does not support: computer vision for score
-and hand sensing, and EEG-based measurement of ensemble coordination.
+We are not aware of a human and a robot having performed four-hand piano repertoire together at a
+single keyboard. This project asks what a different mechanical structure --- a fixed array with one
+actuator per key --- makes possible, and uses that platform to move toward two directions: computer
+vision for score and hand sensing, and EEG-based measurement of ensemble coordination.
 
 \section{This Stage: A MIDI-Driven Four-Hand Robot}
 The prerequisite for either extension is a machine that can hold its part in a real ensemble. The
