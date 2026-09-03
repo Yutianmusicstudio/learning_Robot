@@ -18,7 +18,7 @@
 \begin{document}
 \maketitle
 
-\section{Objective}
+\section*{Objective}
 Build a robot that performs the written \emph{secondo} part of four-hand piano repertoire on a
 standard 88-key piano while a human performs the \emph{primo}, with both players at the same
 keyboard. The target outcome is a working system that plays complete four-hand pieces together with a
@@ -82,7 +82,8 @@ Pianist}~\cite{risset1996duet}, and a Disklavier has played a notated part in re
 with human musicians~\cite{muens2017,yamaha2016ensemble}. Nothing above is claimed as new; it is the
 platform the later stages require.
 
-\section{Milestones and Evaluation}
+\medskip\noindent
+\textbf{Milestones.}
 \begin{enumerate}[label=\textbf{M\arabic*.}]
   \item \textbf{Software only.} The score follower drives the secondo through a digital piano's own
         sound engine, with no actuators. This measures the end-to-end latency budget in the most
@@ -95,7 +96,7 @@ platform the later stages require.
 \end{enumerate}
 
 \noindent
-The measure throughout is note-onset asynchrony between the two parts, compared against human--human
+\textbf{Evaluation.} The measure throughout is note-onset asynchrony between the two parts, compared against human--human
 performance of the same passages recorded under the same conditions. Published reference points:
 detection thresholds for asynchrony in singing ensembles fall between roughly 10 and
 38\,ms~\cite{singingsync2019}; professional string quartets at 157\,bpm show onset asynchrony
