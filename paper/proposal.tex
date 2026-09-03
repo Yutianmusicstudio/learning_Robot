@@ -5,7 +5,6 @@
 \usepackage[utf8]{inputenc}
 \usepackage{microtype}
 \usepackage{enumitem}
-\usepackage{booktabs}
 \usepackage{titlesec}
 \usepackage[hidelinks]{hyperref}
 \titleformat{\section}{\normalfont\large\bfseries}{\thesection.}{0.5em}{}
@@ -19,107 +18,76 @@
 \begin{document}
 \maketitle
 
-\section{Objective}
-Build a robot that performs the written \emph{secondo} part of four-hand piano repertoire on a
-standard 88-key piano while a human performs the \emph{primo}, with both players at the same
-keyboard. The target outcome is a working system that can play through four-hand pieces together
-with a human, evaluated by ensemble timing accuracy. Expressive timing negotiation and neural
-evaluation are deferred to future work (Sec.~\ref{sec:future}).
+\section{Motivation}
+This proposal follows from Wang, Zhang and Iida, who built a UR5 arm with an anthropomorphic hand
+that plays chord accompaniment while a human performs the melody at the same piano, and describe it
+as ``the first instance of designing and implementing a collaborative robot expressly engineered to
+work with humans in the artistic pursuit of piano playing''~\cite{wang2024cooperative}. Two of their
+reported limitations are structural rather than incidental: the chord vocabulary was reduced to seven
+triads ``due to hardware limitations'', and the UR5 is ``not agile/fast enough'', so time budgeted
+for keystrokes must be spent on lateral chord transitions~\cite{wang2024cooperative}.
 
-\section{Background}
-This project follows directly from Wang, Zhang and Iida, who built a UR5 arm with an anthropomorphic
-hand that plays chord accompaniment while a human performs the melody, and describe it as ``the first
-instance of designing and implementing a collaborative robot expressly engineered to work with humans
-in the artistic pursuit of piano playing''~\cite{wang2024cooperative}. Their reported limitations are
-instructive: the chord vocabulary was reduced to seven triads ``due to hardware limitations''; the
-UR5 is ``not agile/fast enough'', so time budgeted for keystrokes must be spent on lateral chord
-transitions; and the predictor requires all 16 melody tokens before it can output a chord,
-``resulting in a lag''~\cite{wang2024cooperative}.
+Both limitations follow from using a single moving arm. This project asks what becomes possible with
+a different mechanical structure --- a fixed actuator array with one actuator per key --- and uses
+that platform to move toward two extensions the arm setup does not support: computer vision for score
+and hand sensing, and EEG-based measurement of ensemble coordination.
 
-Their task is improvised accompaniment: generating chords under an unknown melody. Four-hand piano is
-a different and simpler problem. Both parts are written, so the robot generates nothing --- it must
-press the right keys at the right time while a human plays the other part at the same keyboard.
+\section{This Stage: A MIDI-Driven Four-Hand Robot}
+The prerequisite for either extension is a machine that can hold its part in a real ensemble. The
+work proposed here builds exactly that and nothing more: a robot that performs the written
+\emph{secondo} of four-hand piano repertoire on a standard 88-key instrument, driven by MIDI, while a
+human performs the \emph{primo} at the same keyboard.
 
-Machines have shared a keyboard with a live pianist for decades. Risset's \emph{Duet for One Pianist}
-(1989) has a Disklavier play a computer-generated part that responds to the pianist in real time on
-the same instrument~\cite{risset1996duet}; Yamaha's AI ensemble technology drove a Disklavier through
-the piano part of Schubert's ``Trout'' Quintet in synchrony with members of the Berlin Philharmonic
-in 2016~\cite{yamaha2016ensemble}; and recent generative systems continue a pianist's playing on the
-same keys by turn-taking~\cite{ghostkeys2025}. Piano robots have otherwise been developed mainly as
-soloists~\cite{zakka2023robopianist}, and real-time alignment to a human performer is a mature
-area~\cite{raphael2010musicplusone,cont2008antescofo,cancinochacon2023accompanion}. What we have not
-found reported is the particular configuration proposed here: a purpose-built actuator array
-performing the \emph{notated secondo} of four-hand repertoire, aligned to the human primo by score
-following on a shared keyboard, and evaluated against a human--human four-hand baseline. No component
-of this is claimed as novel; the contribution is the configuration and its measurement.
+\begin{enumerate}[label=\textbf{\Alph*.}]
+  \item \textbf{Fixed solenoid array.} One actuator per key over the secondo register plus a
+        sustain-pedal actuator. A written secondo part requires many keys held at once, which a
+        single hand cannot do; the array also has no lateral travel, removing the transition-time
+        constraint above, and places no moving structure near the human's hands. Solenoids are
+        reported as less expressive than brushless direct-drive actuation for robotic
+        percussion~\cite{nime2020bldc}; that comparison concerns free-trajectory striking, and the
+        expressive cost here will be measured rather than assumed.
+  \item \textbf{Score following.} Real-time alignment to the human's position in the score, built on
+        existing methods~\cite{raphael2010musicplusone,cont2008antescofo,cancinochacon2023accompanion}
+        and open symbolic-score tooling~\cite{partitura2022}. No algorithmic contribution is claimed.
+  \item \textbf{Shared-keyboard note separation.} Both players' notes arrive from one instrument. Two
+        methods --- keyboard split to independent MIDI channels, and subtraction of the robot's own
+        issued commands --- will be implemented and compared.
+\end{enumerate}
 
-\section{The One Thing To Check First}
-Ensemble coordination operates within tolerances of tens of milliseconds. Reported detection
-thresholds for asynchrony in singing ensembles lie between approximately 10 and
-38\,ms~\cite{singingsync2019}; professional string quartets at 157\,bpm show note-onset asynchrony
-standard deviations of 24 and 28\,ms~\cite{quartetsync2014}; networked piano duets are tested at
-transmission latencies of 10, 20 and 40\,ms~\cite{nmpduet2021}. A physical co-performer accumulates
-delay at every stage of its signal chain --- MIDI input, follower update, scheduling, solenoid
-travel, and the instrument's own key-to-sound time. Rough engineering estimates put the total in the
-range of tens of milliseconds, which is the same order as the tolerances above.
+Machines have shared a keyboard with a live pianist since Risset's \emph{Duet for One
+Pianist}~\cite{risset1996duet}, and a Disklavier has played a notated part in real-time synchrony
+with human musicians~\cite{yamaha2016ensemble,ghostkeys2025}. Nothing in the list above is claimed as
+new; it is the platform the later stages require.
 
-This is not presented as a research obstacle. It is the one quantity that determines whether the rest
-of the build is worth doing, and M1 measures it in software before any hardware is bought.
-
-\section{System}
-\textbf{A. Fixed solenoid array.} One actuator per key over the secondo register, plus a
-sustain-pedal actuator, on a standard 88-key instrument. Array extent is a scope parameter:
-approximately 44 keys covers the secondo range, and full 88-key coverage would additionally permit
-role reversal. A fixed array is chosen because a written secondo part requires many keys to be held
-at once; it also has no lateral travel, which removes the transition-time constraint reported
-in~\cite{wang2024cooperative}, and puts no moving structure near the human's hands. Solenoids have
-been reported as less expressive than brushless direct-drive actuation for robotic
-percussion~\cite{nime2020bldc}; that comparison concerns free-trajectory striking, and the expressive
-cost here will be measured rather than assumed.
-
-\textbf{B. Score following.} Real-time alignment to the human's position in the score. This is a
-mature area~\cite{raphael2010musicplusone,cont2008antescofo}, and expressive accompaniment systems
-that adapt to a soloist's tempo, dynamics and articulation already
-exist~\cite{cancinochacon2023accompanion}. \textbf{No algorithmic novelty in score following is
-claimed}; the work here is integration under the constraints of a shared physical instrument.
-Symbolic score handling builds on existing open tooling~\cite{partitura2022}.
-
-\textbf{C. Shared-keyboard note separation.} Both players' notes arrive on one instrument. Two
-candidate methods --- keyboard split to independent MIDI channels, and subtraction of the robot's own
-issued commands --- will be implemented and compared.
-
-\section{Milestones}
+\section{Milestones and Evaluation}
 \begin{enumerate}[label=\textbf{M\arabic*.}]
-  \item \textbf{Software only.} Score follower drives the secondo through the digital piano's own
-        sound engine, removing actuation latency. Measures the latency budget and establishes whether
-        ensemble tolerance is reachable in the most favourable case. A negative result here is
-        decisive and obtained at no hardware cost.
+  \item \textbf{Software only.} The score follower drives the secondo through a digital piano's own
+        sound engine, with no actuators. This measures the end-to-end latency budget in the most
+        favourable case, at no hardware cost.
   \item \textbf{Actuator array.} 8 $\rightarrow$ 24 $\rightarrow$ full secondo range, plus pedal,
         with a custom driver board. Per-stage latency measured on hardware.
-  \item \textbf{Ensemble performance.} Play complete four-hand pieces with a human partner.
+  \item \textbf{Ensemble performance.} Complete four-hand pieces with a human partner. Tchaikovsky's
+        four-hand folk-song arrangements serve as test material; Schubert's \emph{Marches militaires}
+        D.733 and Brahms's \emph{Hungarian Dances} as demonstration pieces.
 \end{enumerate}
 
 \noindent
-\textbf{Repertoire.} Tchaikovsky's four-hand arrangements of Russian folk songs provide short, simple
-test material; Schubert's \emph{Marches militaires} D.733 and Brahms's \emph{Hungarian Dances} serve
-as demonstration pieces.
+The measure throughout is note-onset asynchrony between the two parts, compared against human--human
+performance of the same passages recorded under the same conditions. Published reference points:
+detection thresholds for asynchrony in singing ensembles fall between roughly 10 and
+38\,ms~\cite{singingsync2019}; professional string quartets at 157\,bpm show onset asynchrony
+standard deviations of 24 and 28\,ms~\cite{quartetsync2014}; networked piano duets are tested at
+transmission latencies of 10, 20 and 40\,ms~\cite{nmpduet2021}. A secondary measure is a structured
+report from the pianist co-performer --- the assessment question deferred
+in~\cite{wang2024cooperative}, asked from the co-performer's side rather than the listener's.
 
-\section{Evaluation}
-The primary measure is note-onset asynchrony between the human and robot parts, compared against
-human--human four-hand performance of the same passages recorded under the same conditions. The
-tolerances reported in~\cite{singingsync2019,quartetsync2014,nmpduet2021} provide the reference
-range. A secondary measure is a structured report from the pianist co-performer; the assessment
-question deferred in~\cite{wang2024cooperative} is addressed here from the co-performer's side rather
-than the listener's.
-
-\section{Future Work}
-\label{sec:future}
-Two extensions are deliberately excluded from the present scope. \textbf{(i) Expressive timing.}
-Existing accompaniment systems assume a fixed leader, whereas coordination in human piano duets
-varies with texture and can involve alternating control~\cite{predictivecoding2026}; modelling this
-requires a working system first. \textbf{(ii) Neural evaluation.} EEG hyperscanning against the
-published human--human baseline for duetting pianists~\cite{hyperscanning2021} becomes possible once
-ensemble performance is achieved.
+\section{Subsequent Stages}
+\textbf{(i) Rubato.} Existing accompaniment systems assume a fixed leader, whereas coordination in
+human piano duets varies with texture and can involve alternating control~\cite{predictivecoding2026}.
+\textbf{(ii) EEG.} Hyperscanning against the published human--human baseline for duetting
+pianists~\cite{hyperscanning2021}. \textbf{(iii) Vision and autonomous learning.} Visual score and
+hand sensing, and the autonomous learning direction identified
+in~\cite{wang2024cooperative}, toward improvised ensemble playing.
 
 \bibliographystyle{unsrt}
 \bibliography{references}
