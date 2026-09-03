@@ -36,51 +36,51 @@ triads ``due to hardware limitations'', and the UR5 is ``not agile/fast enough''
 for keystrokes must be spent on lateral chord transitions~\cite{wang2024cooperative}. Both follow
 from the use of a single moving arm.
 
-We are not aware of an external key-pressing robot --- as distinct from a player-piano mechanism
-built into the instrument --- having performed notated four-hand repertoire with a human at a single
-keyboard. The nearest reported cases each differ in a specific respect. WABOT-2 read a score with
-cameras, played a keyboard instrument with both hands and feet, and adjusted its tempo to follow a
-human singer, but on its own instrument rather than a shared keyboard~\cite{kato1987wabot2}. Systems
-built on the Disklavier play a notated part in real-time synchrony with human
-musicians~\cite{muens2017,yamaha2016ensemble}, or add a responding part on the keyboard the pianist
-is playing~\cite{risset1996duet,ghostkeys2025}, but in each case the actuation is internal to the
-instrument. TeoTronico is an external 53-finger key-pressing robot that has appeared in more than
-eighty concerts with a human pianist, but on a second piano and in alternation, replaying
-MIDI~\cite{teotronico}. The system of~\cite{wang2024cooperative} does share the keyboard, but
-generates improvised chords with a single hand rather than performing a written part.
-
-This project asks what a different mechanical structure --- a fixed array with one actuator per key
---- makes possible, and uses that platform to move toward three directions: expressive timing
+We are not aware of an external key-pressing robot having performed notated four-hand repertoire with
+a human at a single keyboard.\footnote{The nearest reported cases each differ in a specific respect.
+WABOT-2 read a score with cameras, played a keyboard instrument with both hands and feet, and
+adjusted its tempo to follow a human singer, but on its own instrument rather than a shared
+keyboard~\cite{kato1987wabot2}. Disklavier-based systems play a notated part in real-time synchrony
+with human musicians~\cite{muens2017,yamaha2016ensemble}, or add a responding part on the keyboard
+the pianist is playing~\cite{risset1996duet,ghostkeys2025}, but in each case the actuation is
+internal to the instrument. TeoTronico is an external 53-finger key-pressing robot that has appeared
+in more than eighty concerts with a human pianist, but on a second piano and in alternation,
+replaying MIDI~\cite{teotronico}. The system of~\cite{wang2024cooperative} does share the keyboard,
+but generates improvised chords with a single hand rather than performing a written part.} This
+project asks what a different mechanical structure --- a fixed array with one actuator per key ---
+makes possible, and uses that platform to move toward three directions: expressive timing
 negotiation (rubato), EEG-based measurement of ensemble coordination, and computer vision for score
 and hand sensing.
 
 \section{This Stage: A MIDI-Driven Four-Hand Robot}
-The prerequisite for all three directions is a machine that can hold its part in a real ensemble. The
-work proposed here builds exactly that and nothing more: a robot that performs the written
+The prerequisite for any of those directions is a machine that can hold its part in a real ensemble.
+The work proposed here builds exactly that and nothing more: a robot that performs the written
 \emph{secondo} of four-hand piano repertoire on a standard 88-key instrument, driven by MIDI, while a
 human performs the \emph{primo} at the same keyboard.
 
 \begin{enumerate}[label=\textbf{\Alph*.}]
   \item \textbf{Fixed solenoid array.} One actuator per key over the secondo register plus a
         sustain-pedal actuator. A written secondo part requires many keys to be held simultaneously,
-        which a single hand cannot do; the array also has no lateral travel, and so is not subject to
-        the transition-time constraint reported in~\cite{wang2024cooperative}, and it places no
-        moving structure near the human's hands. Solenoids have been reported as less expressive than
+        which a single hand cannot do; the array also has no lateral travel, which removes the
+        transition-time constraint noted above~\cite{wang2024cooperative}, and it places no moving
+        structure near the human's hands. Solenoids have been reported as less expressive than
         brushless direct-drive actuation for robotic percussion~\cite{nime2020bldc}; that comparison
         concerns free-trajectory striking, and the expressive cost here will be measured rather than
         assumed.
-  \item \textbf{Score following.} Real-time alignment to the human's position in the score. Existing
-        methods handle this~\cite{raphael2010musicplusone,cont2008antescofo}, including systems that
-        adapt to a soloist's tempo, dynamics and
-        articulation~\cite{cancinochacon2023accompanion}; symbolic score handling uses open
-        tooling~\cite{partitura2022}. No algorithmic contribution is claimed.
+  \item \textbf{Score following.} Real-time alignment to the human's position in the score, built on
+        existing methods --- Music Plus One~\cite{raphael2010musicplusone},
+        Antescofo~\cite{cont2008antescofo}, the ACCompanion~\cite{cancinochacon2023accompanion} ---
+        and open symbolic-score tooling~\cite{partitura2022}. No algorithmic contribution is claimed.
   \item \textbf{Shared-keyboard note separation.} Both players' notes arrive from one instrument. Two
         methods --- keyboard split to independent MIDI channels, and subtraction of the robot's own
         issued commands --- will be implemented and compared.
 \end{enumerate}
 
 \noindent
-None of A--C is claimed as new; together they are the platform the later stages require.
+Machines have shared a keyboard with a live pianist since Risset's \emph{Duet for One
+Pianist}~\cite{risset1996duet}, and a Disklavier has played a notated part in real-time synchrony
+with human musicians~\cite{muens2017,yamaha2016ensemble}. Nothing above is claimed as new; it is the
+platform the later stages require.
 
 \section{Milestones and Evaluation}
 \begin{enumerate}[label=\textbf{M\arabic*.}]
