@@ -20,9 +20,9 @@
 \maketitle
 
 \section*{Objective}
-Build a robot that performs the written \emph{secondo} part of four-hand piano repertoire on a
-standard 88-key piano while a human performs the \emph{primo}, with both players at the same
-keyboard. The target outcome is a working system that plays complete four-hand pieces together with a
+Build a robot that performs the written \emph{secondo} part of four-hand piano repertoire on an
+88-key weighted MIDI keyboard while a human performs the \emph{primo}, with both players at the same
+keyboard. Adaptation to an acoustic piano is a separate later step. The target outcome is a working system that plays complete four-hand pieces together with a
 human, evaluated by ensemble timing accuracy. Expressive timing negotiation, neural evaluation and
 improvised ensemble playing are outside the present scope and are set out in
 Section~\ref{sec:future}.
@@ -34,8 +34,8 @@ as ``the first instance of designing and implementing a collaborative robot expr
 work with humans in the artistic pursuit of piano playing''~\cite{wang2024cooperative}. Two of their
 reported limitations are structural rather than incidental: the chord vocabulary was reduced to seven
 triads ``due to hardware limitations'', and the UR5 is ``not agile/fast enough'', so time budgeted
-for keystrokes must be spent on lateral chord transitions~\cite{wang2024cooperative}. Both follow
-from the use of a single moving arm.
+for keystrokes must be spent on lateral chord transitions~\cite{wang2024cooperative}. Both involve
+the use of a single moving arm.
 
 We are not aware of an external key-pressing robot having performed notated four-hand repertoire with
 a human at a single keyboard.\footnote{The nearest reported cases each differ in a specific respect.
@@ -44,9 +44,11 @@ adjusted its tempo to follow a human singer, but on its own instrument rather th
 keyboard~\cite{kato1987wabot2}. Disklavier-based systems play a notated part in real-time synchrony
 with human musicians~\cite{muens2017,yamaha2016ensemble}, or add a responding part on the keyboard
 the pianist is playing~\cite{risset1996duet,ghostkeys2025}, but in each case the actuation is
-internal to the instrument. TeoTronico is an external 53-finger key-pressing robot that has appeared
-in more than eighty concerts with a human pianist, but on a second piano and in alternation,
-replaying MIDI~\cite{teotronico}. The system of~\cite{wang2024cooperative} does share the keyboard,
+internal to the instrument. External key-pressing Vorsetzers exist with published build
+documentation~\cite{logos_playerpiano}, but are not reported performing four-hand repertoire with a
+human. TeoTronico is an external 53-finger key-pressing robot that has appeared in more than eighty
+concerts with a human pianist, but on a second piano and in alternation, replaying MIDI or mirroring
+a hidden pianist~\cite{teotronico}. The system of~\cite{wang2024cooperative} does share the keyboard,
 but generates improvised chords with a single hand rather than performing a written part.} This
 project asks what a different mechanical structure --- a fixed array with one actuator per key ---
 makes possible, and uses that platform to move toward three directions: expressive timing
@@ -56,8 +58,9 @@ and hand sensing.
 \section{This Stage: A MIDI-Driven Four-Hand Robot}
 The prerequisite for any of those directions is a machine that can hold its part in a real ensemble.
 The work proposed here builds exactly that and nothing more: a robot that performs the written
-\emph{secondo} of four-hand piano repertoire on a standard 88-key instrument, driven by MIDI, while a
-human performs the \emph{primo} at the same keyboard.
+\emph{secondo} of four-hand piano repertoire on an 88-key weighted MIDI keyboard, driven by MIDI, while
+a human performs the \emph{primo} at the same keyboard. In this stage the two players use fixed,
+non-overlapping registers, and the sustain pedal is assigned to one player in advance.
 
 \begin{enumerate}[label=\textbf{\Alph*.}]
   \item \textbf{Fixed solenoid array.} One actuator per key over the secondo register plus a
@@ -72,9 +75,10 @@ human performs the \emph{primo} at the same keyboard.
         existing methods --- Music Plus One~\cite{raphael2010musicplusone},
         Antescofo~\cite{cont2008antescofo}, the ACCompanion~\cite{cancinochacon2023accompanion} ---
         and open symbolic-score tooling~\cite{partitura2022}. No algorithmic contribution is claimed.
-  \item \textbf{Shared-keyboard note separation.} Both players' notes arrive from one instrument. Two
-        methods --- keyboard split to independent MIDI channels, and subtraction of the robot's own
-        issued commands --- will be implemented and compared.
+  \item \textbf{Shared-keyboard note separation.} Both players' notes arrive from one instrument.
+        With non-overlapping registers, attribution is by pitch range; keyboard split to independent
+        MIDI channels is the fallback. Subtraction of the robot's issued commands is not relied on,
+        since a command log is not a record of successful execution.
 \end{enumerate}
 
 \noindent
@@ -85,9 +89,11 @@ platform the later stages require.
 
 \section{Subsequent Stages}
 \label{sec:future}
-\textbf{(i) Rubato.} Existing accompaniment systems assume a fixed
-leader~\cite{cancinochacon2023accompanion}, whereas coordination in human piano duets varies with
-texture and can involve alternating control~\cite{predictivecoding2026}.
+\textbf{(i) Rubato.} Score-following accompanists such as the ACCompanion assume that the human
+leads~\cite{cancinochacon2023accompanion}; leader--follower switching by volume and note density has
+been demonstrated in robotic improvisation~\cite{weinberg2009jam}. Coordination in human piano duets
+varies with texture and can involve alternating control~\cite{predictivecoding2026}; continuous
+timing negotiation over a notated four-hand part is not addressed by either line of work.
 \textbf{(ii) EEG.} Hyperscanning against the published human--human baseline for duetting
 pianists~\cite{hyperscanning2021}.
 \textbf{(iii) Vision and autonomous learning.} Visual score and hand sensing, and the autonomous

@@ -100,3 +100,7 @@ D'Amario et al. 原文三个数字并列：
 | PianoTalk（IEEE 2024，97 键最多四只机械手 "duet"） | 机器对机器 |
 
 四个限定词缺一不可：去掉"外置"，Yamaha 成反例；去掉"同一台键盘"，WABOT-2 成反例；去掉"跟随"，TeoTronico 与 Tchaibotsky 贴近。正文措辞已相应加上 external key-pressing 与 notated 两处限定。
+
+## 2026-09-05 外部评审吸收
+
+评审文件存于 `docs/external-review-2026-09-05.md`。据其核实：ACCompanion 正式出版于 IJCAI 2023（proceedings/2023/0641）；matchmaker 为 arXiv 2510.10087（2025）；Weinberg, Blosser, Mallikarjuna & Raman, NIME 2009, pp. 70–73（本次另经 nime.org 链接确认）。新增先例：Logos Foundation Player Piano（外置 Vorsetzer，建造资料公开）。proposal 相应修改：琴型限定为配重 MIDI 数字钢琴；音域不重叠、踏板归属提前；"两条限制均源于单臂"软化为"均与单臂有关"；rubato 段改为 ACCompanion 假定人领奏 + Weinberg 2009 已有角色切换；脚注加 Logos，TeoTronico 补 mirror-pianist 模式；音符分离不再依赖指令减法。
